@@ -8,6 +8,10 @@ import HierForm from "./components/hierForm.jsx";
 import React, { useEffect, useState } from "react";
 import { auth } from "./firebase.config.js";
 import Login from "./components/login.jsx";
+import ContactUs from "./components/ContactUs/ContactUs.jsx";
+import About from "./components/AboutUs/About.jsx";
+import HirerHistory from "./components/hiererHistory.jsx";
+
 
 function App() {
   const [user, setUser] = useState();
@@ -22,10 +26,13 @@ function App() {
         <Navbar />
         <Routes>
           <Route exact path="/" element={<Map />} />
+          <Route exact path="/about" element={<About/>}/>
+          <Route exact path="/contact" element={<ContactUs/>}/>
           <Route exact path="/form" element={<Form />} />
           <Route exact path="/login" element={user?<Navigate to="/admin"/>:<Login />} />
           <Route exact path="/register" element={user?<Navigate to="/admin"/>:<Register />} />
           <Route exact path="/admin" element={<HierForm/>} />
+          <Route exact path="/hirer-history" element={<HirerHistory/>}/>
         </Routes>
         <Footer />
       </BrowserRouter>

@@ -123,26 +123,65 @@ export default function HierForm() {
     setSearchResults([]);
   };
 
-  const handleHier = async (e) => {
-    e.preventDefault();
-    auth.onAuthStateChanged(async (user) => {
-      try {
-        const locationRef = collection(db, "location");
-        const entryDocRef = doc(locationRef);
-        await setDoc(entryDocRef, {
-          nal: nal,
-          lat: lat,
-          lng: lng,
-          userid: user.uid,
-          wages: wages,
-        });
-
-        toast.success("Hiring Location Saved Successfully!!");
-      } catch (error) {
-        toast.error(error.message);
-      }
-    });
+  // const handleHier = async (e) => {
+  //   e.preventDefault();
+  //   auth.onAuthStateChanged(async (user) => {
+  //     if (!user) {
+  //       toast.error("Please log in first!");
+  //       return;
+  //     }
+  
+  //     try {
+  //       const locationRef = collection(db, "location");
+  //       const entryDocRef = doc(locationRef);
+  //       await setDoc(entryDocRef, {
+  //         nal: nal,
+  //         lat: lat,
+  //         lng: lng,
+  //         userid: user.uid,
+  //         wages: wages,
+  //       });
+  
+  //       // Add to hirer_history collection
+  //       const historyRef = collection(db, "hirer_history", user.uid, "hireForms");
+  //       const historyDocRef = doc(historyRef);
+  //       await setDoc(historyDocRef, {
+  //         nal: nal,
+  //         lat: lat,
+  //         lng: lng,
+  //         wages: wages,
+  //         date: new Date().toISOString(),
+  //       });
+  
+  //       toast.success("Hiring Location Saved Successfully!!");
+  //     } catch (error) {
+  //       toast.error(error.message);
+  //     }
+  //   });
+  // };
+  const handleHier = async (event) => {
+    event.preventDefault();
+  
+    try {
+      const formData = {
+        hirerName,
+        contact,
+        location,
+        positionsAvailable: parseInt(positionsAvailable),
+        timestamp: new Date().toISOString(),
+      };
+  
+      const hirerRef = doc(db, "hirers", user.uid);
+      await setDoc(hirerRef, formData, { merge: true });
+  
+      toast.success("Job posted successfully!");
+    } catch (error) {
+      console.error("Error posting job:", error);
+      toast.error("Failed to post job.");
+    }
   };
+  
+  
 
   return (
     <div className="grid grid-cols-2 gap-8">

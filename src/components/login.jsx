@@ -20,7 +20,7 @@ function Login() {
 
   return (
     <div className="flex justify-center mt-20">
-      <div className="flex flex-col w-[30vw] p-3 bg-white rounded-md">
+      <div className="flex flex-col w-[90vw] sm:w-[60vw] lg:w-[30vw] p-3  rounded-md  ">
         <Toaster
           toastOptions={{ duration: 4000 }}
           position="bottom-center"
@@ -59,7 +59,7 @@ function Login() {
               Submit
             </button>
           </div>
-          <p className=" text-right">
+          <p className=" text-center">
             New user{" "}
             <a href="/register" className="text-blue-600">
               Register Here

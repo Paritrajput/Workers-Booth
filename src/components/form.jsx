@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, increment, updateDoc } from "firebase/firestore";
 import { db } from "../firebase.config"; // Assuming you have your Firebase configuration in this file
 import { toast, Toaster } from "react-hot-toast";
 import { collection, addDoc } from "firebase/firestore"; // Import collection and addDoc functions
+import { setDoc, getDoc } from "firebase/firestore";
 
 function Form() {
   const [applyingLocation, setApplyingLocation] = useState("");
@@ -15,23 +16,27 @@ function Form() {
   const [wages, setWages] = useState(0);
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const coord = urlParams.get("lat");
-    const lat = parseFloat(coord.split(" ")[0]).toFixed(3);
-    const lng = parseFloat(coord.split(" ")[1].split("=")[1]).toFixed(3);
-    const nal = coord.split(" ")[3].split("=")[1];
-    const wages = coord.split(" ")[2].split("=")[1];
-    if (lat && lng && nal) {
-      setApplyingLocation(`${lat}, ${lng}`);
+
+    // Extracting values properly
+    const lat = urlParams.get("lat");
+    const lng = urlParams.get("lng");
+    const nal = urlParams.get("nal");
+    const wages = urlParams.get("wages");
+
+    if (lat && lng && nal && wages) {
+      setApplyingLocation(`${lat}/ ${lng}`);
       setNal(nal);
       setWages(wages);
+    } else {
+      console.error("Missing parameters in URL");
     }
   }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const urlParams = new URLSearchParams(window.location.search);
-    const coord = urlParams.get("lat");
-    const ID = coord.split(" ")[4].split("=")[1];
+    const ID = urlParams.get("ID");
+  
     try {
       const formData = {
         applyingAs,
@@ -39,25 +44,44 @@ function Form() {
         name,
         uidNo,
         mobileNo,
+        timestamp: new Date().toISOString(),
       };
-
+  
       if (parseInt(numberOfLabourers) > nal) {
         toast.error("Number of labourers cannot exceed the available posts.");
         return;
       }
-
-      const entriesCollectionRef = collection(db,"filledPosition",ID,"entries");
-      await addDoc(entriesCollectionRef, formData);
+  
+      // Store laborer details in work history under hirer
+      const workRef = doc(db, "hirers", ID, "workHistory", ID);
+      await updateDoc(workRef, {
+        applicants: arrayUnion(formData),
+        totalApplicants: increment(1),
+      });
+  
+      // Add laborer details in a separate subcollection
+      const laborersRef = collection(db, "hirers", ID, "laborersApplied");
+      await addDoc(laborersRef, formData);
+  
+      // Store laborer details under user's own history
+      const userHistoryRef = doc(db, "users", uidNo, "history", ID);
+      await setDoc(userHistoryRef, { ...formData, hirerId: ID });
+  
       toast.success("Hired Successfully");
+  
       let updatedNal = nal - parseInt(numberOfLabourers);
       updatedNal = Math.max(updatedNal, 0);
-
+  
+      // Update available positions
       const locationDocRef = doc(db, "location", ID);
       await updateDoc(locationDocRef, { nal: updatedNal });
     } catch (error) {
       console.error("Error updating number of available workers:", error);
+      toast.error("Failed to apply. Please try again.");
     }
   };
+  
+  
 
   return (
     <div className="flex justify-center">
