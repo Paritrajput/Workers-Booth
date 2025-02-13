@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import mapboxgl from "mapbox-gl";
 import { auth, db } from "../firebase.config";
-import { collection, doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, doc, getDoc, addDoc, setDoc } from "firebase/firestore";
 import { toast, Toaster } from "react-hot-toast";
 import "mapbox-gl/dist/mapbox-gl.css";
 
@@ -9,6 +10,7 @@ mapboxgl.accessToken =
   "pk.eyJ1Ijoid29ya2VyLWJvb3RoIiwiYSI6ImNsdW1rdTNwczE4cnAya2w1M2YwMnppeHUifQ.bk1WbObVQ6gSEve7O_wBaw"; // Replace with your Mapbox access token
 
 export default function HierForm() {
+  const { t, i18n } = useTranslation();
   const [userDetails, setUserDetails] = useState(null);
   const [nal, setNal] = useState(0);
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,6 +21,7 @@ export default function HierForm() {
   const [map, setMap] = useState(null);
   const [wages, setWages] = useState(0);
   const [marker, setMarker] = useState(null);
+  const [isLoading, setIsLoading] = useState(false); // Track loading state
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
@@ -27,6 +30,7 @@ export default function HierForm() {
       if (docSnap.exists()) {
         setUserDetails(docSnap.data());
       } else {
+        // Handle case if user does not exist in the db
       }
     });
   };
@@ -123,167 +127,130 @@ export default function HierForm() {
     setSearchResults([]);
   };
 
-  // const handleHier = async (e) => {
-  //   e.preventDefault();
-  //   auth.onAuthStateChanged(async (user) => {
-  //     if (!user) {
-  //       toast.error("Please log in first!");
-  //       return;
-  //     }
-  
-  //     try {
-  //       const locationRef = collection(db, "location");
-  //       const entryDocRef = doc(locationRef);
-  //       await setDoc(entryDocRef, {
-  //         nal: nal,
-  //         lat: lat,
-  //         lng: lng,
-  //         userid: user.uid,
-  //         wages: wages,
-  //       });
-  
-  //       // Add to hirer_history collection
-  //       const historyRef = collection(db, "hirer_history", user.uid, "hireForms");
-  //       const historyDocRef = doc(historyRef);
-  //       await setDoc(historyDocRef, {
-  //         nal: nal,
-  //         lat: lat,
-  //         lng: lng,
-  //         wages: wages,
-  //         date: new Date().toISOString(),
-  //       });
-  
-  //       toast.success("Hiring Location Saved Successfully!!");
-  //     } catch (error) {
-  //       toast.error(error.message);
-  //     }
-  //   });
-  // };
   const handleHier = async (event) => {
     event.preventDefault();
-  
-    try {
-      const formData = {
-        hirerName,
-        contact,
-        location,
-        positionsAvailable: parseInt(positionsAvailable),
-        timestamp: new Date().toISOString(),
-      };
-  
-      const hirerRef = doc(db, "hirers", user.uid);
-      await setDoc(hirerRef, formData, { merge: true });
-  
-      toast.success("Job posted successfully!");
-    } catch (error) {
-      console.error("Error posting job:", error);
-      toast.error("Failed to post job.");
-    }
+
+    setIsLoading(true); // Set loading to true when form is submitted
+
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        toast.error(t('login_error'));
+        setIsLoading(false); // Stop loading if user is not logged in
+        return;
+      }
+
+      try {
+        // Store location data under "location"
+        const locationRef = collection(db, "location");
+        const entryDocRef = await addDoc(locationRef, {
+          nal: nal,
+          lat: lat,
+          lng: lng,
+          userid: user.uid,
+          wages: wages,
+          timestamp: new Date().toISOString(),
+        });
+
+        // Store hirer history under "hirer_history" using the location ID
+        const historyRef = collection(db, "hirer_history", user.uid, "hireForms");
+        const historyDocRef = doc(historyRef, entryDocRef.id);
+        await setDoc(historyDocRef, {
+          nal: nal,
+          lat: lat,
+          lng: lng,
+          wages: wages,
+          locationId: entryDocRef.id, // Store the generated location ID
+          date: new Date().toISOString(),
+        });
+
+        toast.success(t('success_message'));
+
+        // Reset the form data after successful submission
+        setNal(0);
+        setWages(0);
+        setSearchQuery("");
+        setLat(0);
+        setLng(0);
+        setSelectedLocation(null);
+      } catch (error) {
+        console.error("Error saving hiring data:", error);
+        toast.error(t('error_message'));
+      } finally {
+        setIsLoading(false); // Stop loading when the process is complete
+      }
+    });
   };
-  
-  
 
   return (
     <div className="grid grid-cols-2 gap-8">
       <div>
-        <div className="flex justify-center pt-24">
-          <div className="flex flex-col w-[40vw] p-3 bg-white rounded-md relative">
-            <Toaster
-              toastOptions={{ duration: 4000 }}
-              position="bottom-center"
-              reverseOrder={false}
-            />
-            <form onSubmit={handleHier}>
-              <h2 className="text-2xl text-center font-bold mb-6">
-                Application Form for Hirer
-              </h2>
-              <div className="mb-3 flex gap-4">
-                <div className="mb-3">
-                  <label>Latitude</label>
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-500"
-                    placeholder="Latitude"
-                    value={lat}
-                    disabled
-                  />
-                </div>
-                <div className="mb-3">
-                  <label>Longitude</label>
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-500"
-                    placeholder="Longitude"
-                    value={lng}
-                    disabled
-                  />
-                </div>
-              </div>
-              <div className="mb-3 flex gap-4">
-                <div className="mb-3">
-                  <label>No. of labourers required</label>
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-500"
-                    placeholder="Enter labourers required"
-                    onChange={(e) => setNal(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="mb-3">
-                  <label>Wages</label>
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-500"
-                    placeholder="Amount"
-                    onChange={(e) => setWages(e.target.value)}
-                    required
-                  />
-                </div>
-              </div>
-              <div className="mb-3 relative">
-                <label>Work Location</label>
-                <input
-                  type="text"
-                  className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-500"
-                  placeholder="Location"
-                  value={searchQuery}
-                  onChange={(e) => {
-                    setSearchQuery(e.target.value);
-                    handleAutocomplete();
-                  }}
-                />
-                <div className="autocomplete rounded-md absolute top-full left-0 w-full bg-white border border-gray-300 shadow-md z-10">
-                  {searchResults.map((result) => (
-                    <div
-                      key={result.id}
-                      onClick={() => handleSelectLocation(result)}
-                      className="autocomplete-item p-2 cursor-pointer hover:bg-gray-100"
-                    >
-                      {result.place_name}
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="absolute w-[40vw] pr-6">
-                <button
-                  type="submit"
-                  className="w-full bg-gray-500 text-white rounded-md px-2 py-2 hover:bg-gray-600 transition duration-300"
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          </div>
+        <div className="flex justify-center pt-10">
+          <h2 className="text-xl font-semibold">{t('application_form')}</h2>
         </div>
+        <form onSubmit={handleHier} className="space-y-4 p-10">
+          <div className="flex justify-between space-x-2">
+            <div className="w-1/2">
+              <label>{t('latitude')}</label>
+              <input
+                type="number"
+                value={lat}
+                onChange={(e) => setLat(e.target.value)}
+                className="border p-2 w-full"
+                required
+              />
+            </div>
+            <div className="w-1/2">
+              <label>{t('longitude')}</label>
+              <input
+                type="number"
+                value={lng}
+                onChange={(e) => setLng(e.target.value)}
+                className="border p-2 w-full"
+                required
+              />
+            </div>
+          </div>
+          <div>
+            <label>{t('labourers_required')}</label>
+            <input
+              type="number"
+              value={nal}
+              onChange={(e) => setNal(e.target.value)}
+              className="border p-2 w-full"
+              required
+            />
+          </div>
+          <div>
+            <label>{t('wages')}</label>
+            <input
+              type="number"
+              value={wages}
+              onChange={(e) => setWages(e.target.value)}
+              className="border p-2 w-full"
+              required
+            />
+          </div>
+          <div>
+            <label>{t('work_location')}</label>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyUp={handleAutocomplete}
+              className="border p-2 w-full"
+              placeholder={t('location_placeholder')}
+              required
+            />
+          </div>
+          <div>
+            <button type="submit" className="bg-blue-500 text-white p-2 w-full">
+              {isLoading ? t('submitting_button') : t('submit_button')}
+            </button>
+          </div>
+        </form>
       </div>
-      <div>
-        <div
-          id="map"
-          className="h-[70vh] m-10 rounded-lg border border-solid border-black"
-        ></div>
-      </div>
+      <div id="map" className="h-[500px] col-span-1"></div>
+      <Toaster />
     </div>
   );
 }

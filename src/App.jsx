@@ -10,7 +10,9 @@ import { auth } from "./firebase.config.js";
 import Login from "./components/login.jsx";
 import ContactUs from "./components/ContactUs/ContactUs.jsx";
 import About from "./components/AboutUs/About.jsx";
-import HirerHistory from "./components/hiererHistory.jsx";
+import HirerHistory from "./components/hirerHistory.jsx";
+import Myprofile from "./components/myProfile.jsx";
+
 
 
 function App() {
@@ -32,6 +34,7 @@ function App() {
           <Route exact path="/login" element={user?<Navigate to="/admin"/>:<Login />} />
           <Route exact path="/register" element={user?<Navigate to="/admin"/>:<Register />} />
           <Route exact path="/admin" element={<HierForm/>} />
+          <Route exact path="/my-profile" element={<Myprofile/>} />
           <Route exact path="/hirer-history" element={<HirerHistory/>}/>
         </Routes>
         <Footer />

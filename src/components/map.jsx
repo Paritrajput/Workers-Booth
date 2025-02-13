@@ -6,6 +6,7 @@ import "@maptiler/geocoding-control/style.css";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { db } from "../firebase.config";
 import { collection, getDocs } from "firebase/firestore";
+import { useTranslation } from "react-i18next"; // Importing the translation hook
 
 export default function Map() {
   const mapContainer = useRef(null);
@@ -17,6 +18,7 @@ export default function Map() {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [markerInstances, setMarkerInstances] = useState([]);
   const [placeName, setPlaceName] = useState(""); // Store place name
+  const { t } = useTranslation(); // Hook for language translation
 
   useEffect(() => {
     if (map.current) return;
@@ -71,10 +73,10 @@ export default function Map() {
           .setPopup(
             new maplibregl.Popup({ closeButton: false }).setHTML(
               `<div >
-                <p>No. of Labourers Required: ${marker.nal}</p>
-                <p>Wages: Rs. ${marker.wages}</p>
+                <p>${t("Labourers Required")}: ${marker.nal}</p>
+                <p>${t("Wages")}: Rs. ${marker.wages}</p>
                 <a href='/form?lat=${marker.lat}&lng=${marker.lng}&wages=${marker.wages}&nal=${marker.nal}&ID=${marker.ID}'>
-                  Open Form
+                  ${t("Open Form")}
                 </a>
               </div>`
             )
@@ -106,44 +108,60 @@ export default function Map() {
       if (data && data.features.length > 0) {
         setPlaceName(data.features[0].place_name); // Get detailed place name
       } else {
-        setPlaceName("Unknown Location");
+        setPlaceName(t("error_fetching_location"));
       }
     } catch (error) {
       console.error("Error fetching place name:", error);
-      setPlaceName("Error fetching location");
+      setPlaceName(t("error_fetching_location"));
     }
   };
 
   return (
     <div className="w-full p-3 sm:p-5 flex max-lg:flex-col">
       {/* Map Section */}
-      <div className="lg:w-[80%] w-full relative">
+      <div
+        className={` relative ${selectedMarker ? "lg:w-[80%] w-full" : "w-full"}`}
+      >
         <div className="z-10 fixed p-2 sm:p-10 w-screen">
           <GeocodingControl apiKey={API_KEY} mapController={mapController} />
         </div>
-        <div className="lg:h-[80vh] h-[55vh] border-2 border-gray-500 rounded-xl" ref={mapContainer} />
+        <div
+          className="lg:h-[79vh] h-[55vh] border-2 border-gray-500 rounded-xl"
+          ref={mapContainer}
+        />
       </div>
 
       {/* Sidebar Section */}
-      <div className="lg:w-[20%] w-[100%] pt-3 sm:p-5 border-l border-gray-400">
-        {selectedMarker ? (
+      {selectedMarker ? (
+        <div className="lg:w-[20%] w-[100%] pt-3 sm:p-5 border-l border-gray-400">
           <div className="p-3 bg-gray-200 rounded-lg shadow-md">
-            <h3 className="text-lg font-bold mb-2">Location Details</h3>
-            <p><strong>Coordinates:</strong> {selectedMarker.lat}, {selectedMarker.lng}</p>
-            <p><strong>Place:</strong> {placeName || "Loading..."}</p>
-            <p><strong>Labourers Required:</strong> {selectedMarker.nal}</p>
-            <p><strong>Wages:</strong> Rs. {selectedMarker.wages}</p>
+            <h3 className="text-2xl font-bold mb-2 text-center">
+              {t("Location")}
+            </h3>
+            <p>
+              <strong>{t("Coordinates")}:</strong> {selectedMarker.lat},{" "}
+              {selectedMarker.lng}
+            </p>
+            <p>
+              <strong>{t("Place")}:</strong> {placeName || t("Loading...")}
+            </p>
+            <p>
+              <strong>{t("Labourers Required")}:</strong> {selectedMarker.nal}
+            </p>
+            <p>
+              <strong>{t("Wages")}:</strong> Rs. {selectedMarker.wages}
+            </p>
             <a
               href={`/form?lat=${selectedMarker.lat}&lng=${selectedMarker.lng}&wages=${selectedMarker.wages}&nal=${selectedMarker.nal}&ID=${selectedMarker.ID}`}
               className="text-blue-500 hover:underline mt-2 block"
             >
-              Open Form
+              {t("Open Form")}
             </a>
           </div>
-        ) : (
-          <p className="text-gray-500 text-center">Choose a location marker to see details</p>
-        )}
-      </div>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

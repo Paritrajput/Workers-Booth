@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { arrayUnion, doc, increment, updateDoc } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase.config"; // Assuming you have your Firebase configuration in this file
 import { toast, Toaster } from "react-hot-toast";
 import { collection, addDoc } from "firebase/firestore"; // Import collection and addDoc functions
-import { setDoc, getDoc } from "firebase/firestore";
 
 function Form() {
   const [applyingLocation, setApplyingLocation] = useState("");
@@ -14,29 +13,45 @@ function Form() {
   const [uidNo, setUidNo] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const [wages, setWages] = useState(0);
+  const [loading, setLoading] = useState(false); // State to handle loading
+  const [progress, setProgress] = useState(0); // To manage progress bar
+
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-
-    // Extracting values properly
+  
     const lat = urlParams.get("lat");
     const lng = urlParams.get("lng");
-    const nal = urlParams.get("nal");
     const wages = urlParams.get("wages");
-
-    if (lat && lng && nal && wages) {
-      setApplyingLocation(`${lat}/ ${lng}`);
-      setNal(nal);
-      setWages(wages);
-    } else {
-      console.error("Missing parameters in URL");
+    const nal = urlParams.get("nal");
+  
+    if (!lat || !lng || !wages || !nal) {
+      console.error("Missing required parameters in URL");
+      return;
     }
+  
+    const parsedLat = parseFloat(lat).toFixed(3);
+    const parsedLng = parseFloat(lng).toFixed(3);
+    const parsedWages = parseInt(wages, 10);
+    const parsedNal = parseInt(nal, 10);
+  
+    setApplyingLocation(`${parsedLat}, ${parsedLng}`);
+    setNal(parsedNal);
+    setWages(parsedWages);
   }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     const urlParams = new URLSearchParams(window.location.search);
-    const ID = urlParams.get("ID");
+    const lat = urlParams.get("lat");
+    const ID = urlParams.get("ID"); // Extracting ID correctly
   
+    if (!lat || !ID) {
+      console.error("Missing 'lat' or 'ID' parameter in URL");
+      toast.error("Invalid URL format");
+      return;
+    }
+
     try {
       const formData = {
         applyingAs,
@@ -44,44 +59,46 @@ function Form() {
         name,
         uidNo,
         mobileNo,
-        timestamp: new Date().toISOString(),
       };
-  
+
       if (parseInt(numberOfLabourers) > nal) {
-        toast.error("Number of labourers cannot exceed the available posts.");
+        toast.error("Number of labourers cannot exceed available posts.");
         return;
       }
-  
-      // Store laborer details in work history under hirer
-      const workRef = doc(db, "hirers", ID, "workHistory", ID);
-      await updateDoc(workRef, {
-        applicants: arrayUnion(formData),
-        totalApplicants: increment(1),
-      });
-  
-      // Add laborer details in a separate subcollection
-      const laborersRef = collection(db, "hirers", ID, "laborersApplied");
-      await addDoc(laborersRef, formData);
-  
-      // Store laborer details under user's own history
-      const userHistoryRef = doc(db, "users", uidNo, "history", ID);
-      await setDoc(userHistoryRef, { ...formData, hirerId: ID });
-  
-      toast.success("Hired Successfully");
-  
+
+      setLoading(true); // Set loading to true when submitting
+
+      const entriesCollectionRef = collection(db, "filledPosition", ID, "entries");
+      await addDoc(entriesCollectionRef, formData);
+
+      setProgress(50); // Set progress to 50% after successful document submission
+      
       let updatedNal = nal - parseInt(numberOfLabourers);
       updatedNal = Math.max(updatedNal, 0);
-  
-      // Update available positions
+
       const locationDocRef = doc(db, "location", ID);
       await updateDoc(locationDocRef, { nal: updatedNal });
+
+      setProgress(100); // Complete progress bar
+      toast.success("Hired Successfully");
+
+      // Clear the form data after successful submission
+      setApplyingLocation("");
+      setApplyingAs("individual");
+      setNumberOfLabourers("1");
+      setNal(0);
+      setName("");
+      setUidNo("");
+      setMobileNo("");
+      setWages(0);
+
     } catch (error) {
       console.error("Error updating number of available workers:", error);
-      toast.error("Failed to apply. Please try again.");
+      toast.error("Error submitting the form. Please try again.");
+    } finally {
+      setLoading(false); // Reset loading state
     }
   };
-  
-  
 
   return (
     <div className="flex justify-center">
@@ -121,7 +138,7 @@ function Form() {
               />
             </div>
             <div className="w-1/2 ml-4">
-              <label htmlFor="applyingLocation" className="block mb-1">
+              <label htmlFor="wages" className="block mb-1">
                 Wages:
               </label>
               <input
@@ -133,6 +150,8 @@ function Form() {
               />
             </div>
           </div>
+          
+          {/* Radio buttons for applying as individual or contractor */}
           <div className="flex items-center space-x-4">
             <span className="block font-medium mb-1">Applying As:</span>
             <div>
@@ -165,6 +184,7 @@ function Form() {
               </label>
             </div>
           </div>
+          
           {applyingAs === "contractor" && (
             <div>
               <label htmlFor="numberOfLabourers" className="block mb-1">
@@ -180,6 +200,8 @@ function Form() {
               />
             </div>
           )}
+          
+          {/* Form fields for Name, UID, Mobile Number */}
           <div>
             <label htmlFor="name" className="block mb-1">
               Name:
@@ -219,6 +241,17 @@ function Form() {
               className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-500"
             />
           </div>
+
+          {/* Progress bar for loading */}
+          {loading && (
+            <div className="w-full bg-gray-200 h-2 mb-4">
+              <div
+                style={{ width: `${progress}%` }}
+                className="bg-blue-500 h-full transition-width duration-300"
+              ></div>
+            </div>
+          )}
+          
           <div>
             <button
               type="submit"
