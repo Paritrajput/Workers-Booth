@@ -12,7 +12,7 @@ export default function LanguageSwitcher() {
     <select
       onChange={(e) => changeLanguage(e.target.value)}
       value={i18n.language}
-      className="border border-gray-300 px-3 py-1 rounded-md bg-black "
+      className="border border-gray-300 px-3 py-0 rounded-md bg-black "
     >
       <option value="en">English</option>
       <option value="hi">हिन्दी</option>

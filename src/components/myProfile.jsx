@@ -50,7 +50,7 @@ const Myprofile = () => {
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
 
   return (
-    <div>
+    <div  className="h-[85vh] overflow-y-auto">
       <div className="flex items-center justify-between p-5 bg-gray-300">
         <div className="flex items-center gap-4">
           <FaRegCircleUser className="h-12 w-12" height={32} width={32} />
@@ -65,7 +65,7 @@ const Myprofile = () => {
           </button>
         </div>
       </div>
-      <div>
+      <div className="overflow-y-auto">
         <HirerHistory />
       </div>
     </div>

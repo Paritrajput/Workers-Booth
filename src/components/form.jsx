@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase.config"; // Assuming you have your Firebase configuration in this file
+import { db } from "../firebase.config";
 import { toast, Toaster } from "react-hot-toast";
-import { collection, addDoc } from "firebase/firestore"; // Import collection and addDoc functions
+import { collection, addDoc } from "firebase/firestore";
+import { useTranslation } from "react-i18next"; // Import i18n
 
 function Form() {
+  const { t, i18n } = useTranslation(); // Use translation hook
+
   const [applyingLocation, setApplyingLocation] = useState("");
   const [applyingAs, setApplyingAs] = useState("individual");
   const [numberOfLabourers, setNumberOfLabourers] = useState("1");
@@ -13,27 +16,31 @@ function Form() {
   const [uidNo, setUidNo] = useState("");
   const [mobileNo, setMobileNo] = useState("");
   const [wages, setWages] = useState(0);
-  const [loading, setLoading] = useState(false); // State to handle loading
-  const [progress, setProgress] = useState(0); // To manage progress bar
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  // Handle language change
+  const handleLanguageChange = (lang) => {
+    i18n.changeLanguage(lang);
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-  
     const lat = urlParams.get("lat");
     const lng = urlParams.get("lng");
     const wages = urlParams.get("wages");
     const nal = urlParams.get("nal");
-  
+
     if (!lat || !lng || !wages || !nal) {
       console.error("Missing required parameters in URL");
       return;
     }
-  
+
     const parsedLat = parseFloat(lat).toFixed(3);
     const parsedLng = parseFloat(lng).toFixed(3);
     const parsedWages = parseInt(wages, 10);
     const parsedNal = parseInt(nal, 10);
-  
+
     setApplyingLocation(`${parsedLat}, ${parsedLng}`);
     setNal(parsedNal);
     setWages(parsedWages);
@@ -41,11 +48,10 @@ function Form() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     const urlParams = new URLSearchParams(window.location.search);
     const lat = urlParams.get("lat");
-    const ID = urlParams.get("ID"); // Extracting ID correctly
-  
+    const ID = urlParams.get("ID");
+
     if (!lat || !ID) {
       console.error("Missing 'lat' or 'ID' parameter in URL");
       toast.error("Invalid URL format");
@@ -54,7 +60,7 @@ function Form() {
 
     try {
       if (parseInt(numberOfLabourers) > nal) {
-        toast.error("Number of labourers cannot exceed available posts.");
+        toast.error(t("Number of labourers cannot exceed available posts."));
         return;
       }
 
@@ -67,7 +73,7 @@ function Form() {
       let updatedNal = Math.max(nal - parseInt(numberOfLabourers), 0);
       await updateDoc(doc(db, "location", ID), { nal: updatedNal });
       setProgress(100);
-      toast.success("Hired Successfully");
+      toast.success(t("Hired Successfully"));
 
       const historyData = {
         name,
@@ -90,28 +96,22 @@ function Form() {
       setWages(0);
     } catch (error) {
       console.error("Error updating number of available workers:", error);
-      toast.error("Error submitting the form. Please try again.");
+      toast.error(t("Error submitting the form. Please try again."));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center">
-      <Toaster
-        toastOptions={{ duration: 4000 }}
-        position="bottom-center"
-        reverseOrder={false}
-      />
+    <div className="flex justify-center h-[85vh]">
+      <Toaster toastOptions={{ duration: 4000 }} position="bottom-center" reverseOrder={false} />
       <div className="flex flex-col w-[40vw] p-3 bg-white rounded-md">
-        <h2 className="text-2xl text-center font-bold mb-6">
-          Application Form
-        </h2>
+        <h2 className="text-2xl text-center font-bold mb-6">{t("applicationForm")}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="flex w-full">
             <div className="w-1/2 mr-2">
               <label htmlFor="applyingLocation" className="block mb-1">
-                Location (Lat/Lng):
+                {t("location")}:
               </label>
               <input
                 type="text"
@@ -123,7 +123,7 @@ function Form() {
             </div>
             <div className="w-1/2 ml-2">
               <label htmlFor="postavail" className="block mb-1">
-                Post Available:
+                {t("postAvailable")}:
               </label>
               <input
                 type="text"
@@ -135,7 +135,7 @@ function Form() {
             </div>
             <div className="w-1/2 ml-4">
               <label htmlFor="wages" className="block mb-1">
-                Wages:
+                {t("wages")}:
               </label>
               <input
                 type="text"
@@ -146,10 +146,10 @@ function Form() {
               />
             </div>
           </div>
-          
+
           {/* Radio buttons for applying as individual or contractor */}
           <div className="flex items-center space-x-4">
-            <span className="block font-medium mb-1">Applying As:</span>
+            <span className="block font-medium mb-1">{t("applyingAs")}:</span>
             <div>
               <input
                 type="radio"
@@ -163,7 +163,7 @@ function Form() {
                 className="mr-2 appearance-none border border-gray-300 rounded-full h-3 w-3 checked:bg-gray-500 outline-offset-1 outline-gray-300 outline"
               />
               <label htmlFor="individual" className="mr-4">
-                Individual
+                {t("individual")}
               </label>
             </div>
             <div>
@@ -176,15 +176,15 @@ function Form() {
                 className="mr-2 appearance-none border border-gray-300 rounded-full h-3 w-3 checked:bg-gray-500 outline-offset-1 outline-gray-300 outline"
               />
               <label htmlFor="contractor" className="mr-4">
-                Contractor
+                {t("contractor")}
               </label>
             </div>
           </div>
-          
+
           {applyingAs === "contractor" && (
             <div>
               <label htmlFor="numberOfLabourers" className="block mb-1">
-                Number of Labourers:
+                {t("numberOfLabourers")}:
               </label>
               <input
                 type="number"
@@ -196,11 +196,11 @@ function Form() {
               />
             </div>
           )}
-          
+
           {/* Form fields for Name, UID, Mobile Number */}
           <div>
             <label htmlFor="name" className="block mb-1">
-              Name:
+              {t("name")}:
             </label>
             <input
               type="text"
@@ -213,7 +213,7 @@ function Form() {
           </div>
           <div>
             <label htmlFor="uidNo" className="block mb-1">
-              UID No.:
+              {t("uidNo")}:
             </label>
             <input
               type="text"
@@ -226,7 +226,7 @@ function Form() {
           </div>
           <div>
             <label htmlFor="mobileNo" className="block mb-1">
-              Mobile No.:
+              {t("mobileNo")}:
             </label>
             <input
               type="tel"
@@ -247,19 +247,22 @@ function Form() {
               ></div>
             </div>
           )}
-          
+
           <div>
             <button
               type="submit"
               className="w-full bg-gray-500 text-white rounded-md px-4 py-2 hover:bg-gray-600 transition duration-300"
             >
-              Submit
+              {t("submit")}
             </button>
           </div>
         </form>
+
+    
+  
       </div>
     </div>
   );
 }
 
-export default Form;    
+export default Form;

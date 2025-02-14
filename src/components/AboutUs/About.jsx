@@ -6,7 +6,7 @@ function About() {
   const { t } = useTranslation();
 
   return (
-    <div className="overflow-y-hidden">
+    <div  className="h-[85vh] overflow-y-auto">
       <section className="bg-gray-100">
         <div className="container mx-auto py-5 px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-8">

@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { AiOutlineLinkedin } from "react-icons/ai";
+import { CgInstagram } from "react-icons/cg";
+import { FaSquareGithub } from "react-icons/fa6";
+
 
 const ContactUs = () => {
   const { t } = useTranslation();
@@ -47,7 +51,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="bg-gray-100">
+    <div  className="bg-gray-100 h-[85vh] overflow-y-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="bg-gray-700 text-white md:m-0 m-9 p-6 shadow-md h-[90vh]">
           <h2 className="text-3xl font-bold mb-4">{t("contactUs")}</h2>
@@ -74,6 +78,15 @@ const ContactUs = () => {
             </button>
             <p className="text-center mt-4 text-gray-600">{status}</p>
           </form>
+          <div className="text-center text-lg my-1 font-bold">{t("SocialHandles")} :</div>
+          <div className="flex gap-5 items-center w-full justify-center">
+            
+            <Link to="/"><AiOutlineLinkedin  className="h-9 w-9"/></Link>
+            <Link to="/"> <CgInstagram className="h-8 w-8"/></Link>
+            <Link to="/"> <FaSquareGithub className="h-8 w-8"/></Link>
+           
+          
+          </div>
         </div>
 
         <div className="bg-white p-6 m-9 h-fit rounded-lg shadow-md">

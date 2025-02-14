@@ -28,7 +28,7 @@ function App() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-screen font-sans antialiased">
+    <div className="flex flex-col h-[100vh] font-sans antialiased overflow-y-hidden">
       <BrowserRouter>
         <Navbar />
         <Routes>

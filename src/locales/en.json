@@ -1,111 +1,173 @@
 {
-
-    
-        "Location": "Location",
-        "Coordinates": "Coordinates",
-        "Place": "Place",
-        "Labourers Required": "Labourers Required",
-        "Wages": "Wages",
-        "Open Form": "Open Form",
-        "error_fetching_location": "Error fetching location",
-      
-      
-
-    
-        "loginTitle": "Login As Hirer",
-        "emailLabel": "Email address",
-        "passwordLabel": "Password",
-        "emailPlaceholder": "Enter email",
-        "passwordPlaceholder": "Enter password",
-        "submitButton": "Submit",
-        "newUserText": "New user",
-        "registerHere": "Register Here",
-        "toastLoginSuccess": "User logged in Successfully",
-        "toastLoginError": "Invalid email or password",
-        
-            "home": "Home",
-            "hier": "Hire",
-            "about": "About",
-            "contactUs": "Contact Us",
-            "ajivika": "AJIVIKA",
-            "admin": "Admin",
-            "hirerHistory": "Hirer's History",
-            "logout": "Logout",
-          
-            
-                "aboutUs": "About Us",
-                "aboutDescription": "Team Vibhav is the official departmental team of the Electronics & Communication Engineering Department at NIT Hamirpur, dedicated to contributing to Nimbus, the institute’s annual technical festival. As a team, we cultivate a spirit of innovation, teamwork, and technical excellence, fostering an environment where students can develop and showcase their skills in electronics, robotics, embedded systems, and cutting-edge technologies. At Team Vibhav, we believe in nurturing a deep and genuine commitment toward technological advancements. Our diverse pool of talented students continuously explores new ideas, pushing the boundaries of what is possible. Whether it's designing intelligent automation systems, IoT-based applications, or futuristic electronic projects, we encourage creativity and hands-on learning.",
-                "connectWithUs": "Connect with us",
-                
-                    
-                    "name": "Name",
-                    "email": "Email",
-                    "message": "Message",
-                    "sendMessage": "Send Message",
-                    "sending": "Sending...",
-                    "messageSent": "Message sent successfully!",
-                    "messageFailed": "Failed to send message.",
-                    "errorOccurred": "Error occurred. Please try again.",
-                    "socialHandles": "Social Handles",
-                    "faq": "Frequently Asked Questions",
-                    "faqs": [
-                      {
-                        "question": "How can I apply for a job as a worker?",
-                        "answer": "To apply for a job, simply browse the map to find available positions. Click on the job marker to view details such as location, wages, and requirements. If the job suits you, fill out the application form and submit it. You will be notified about the status of your application."
-                      },
-                      {
-                        "question": "How do hirers create a job post?",
-                        "answer": "Hirers can create a job post by filling out a simple form on the website. The form includes details like the job location, available posts (positions), wages, and more. Once submitted, your job post will be visible on the map for workers to apply."
-                      },
-                      {
-                        "question": "Can a hirer see who applied for the job?",
-                        "answer": "Yes, hirers can track applicants and view their details (name, contact info, etc.) through the hirer's dashboard. The hirer can also manage and review the applications directly."
-                      },
-                      {
-                        "question": "How can I track the history of the workers I hired?",
-                        "answer": "Hirers can view their hiring history on the Hirer History page. This page shows the details of workers they have hired, including names, contact information, and job specifics."
-                      },
-                      {
-                        "question": "Can I apply for multiple jobs as a worker?",
-                        "answer": "Yes, workers can apply for multiple jobs, provided they meet the job requirements and there are available positions."
-                      }
-                    ],
-
-                    
-                        "application_form": "Application Form for Hirer",
-                        "latitude": "Latitude",
-                        "longitude": "Longitude",
-                        "no_labourers_required": "No. of labourers required",
-                        "wages": "Wages",
-                        "work_location": "Work Location",
-                        "location_placeholder": "Location",
-                        "submit_button": "Submit",
-                        "submitting_button": "Submitting...",
-                        "login_error": "Please log in first!",
-                        "success_message": "Hiring Location & History Saved Successfully!",
-                        "error_message": "Failed to save hiring details.",
-                        
-                            "hiring_history": "Your Hiring History",
-                            "no_hiring_records": "No hiring records found.",
-                            "labourers_required": "Labourers Required",
-                        
-                            "vacancies": "Positions Available(vacancies)",
-                            "applied_labourers": "Applied Laborers",
-                            "no_labourers_applied": "No laborers applied yet.",
-                      
-                            "error_loading_history": "Failed to load history.",
-                            
-                                "profile": "Profile",
-                              
-                                "user": "User",
-                                "error_fetching_data": "Error fetching user data."
-                              
-                              
-                          
-                          
-                      
-                      
-                  
-                      
-  }
+  "Location": "Location",
+  "Coordinates": "Coordinates",
+  "Place": "Place",
+  "Labourers Required": "Labourers Required",
+  "Wages": "Wages",
+  "Open Form": "Open Form",
+  "error_fetching_location": "Error fetching location",
+  "loginTitle": "Login As Hirer",
+  "emailLabel": "Email address",
+  "passwordLabel": "Password",
+  "emailPlaceholder": "Enter email",
+  "passwordPlaceholder": "Enter password",
+  "submitButton": "Submit",
+  "newUserText": "New user",
+  "registerHere": "Register Here",
+  "toastLoginSuccess": "User logged in Successfully",
+  "toastLoginError": "Invalid email or password",
+  "home": "Home",
+  "hier": "Hire",
+  "about": "About",
+  "contactUs": "Contact Us",
+  "ajivika": "AJIVIKA",
+  "admin": "Admin",
+  "hirerHistory": "Hirer's History",
+  "logout": "Logout",
+  "aboutUs": "About Us",
+  "aboutDescription": "Team Vibhav is the official departmental team of the Electronics & Communication Engineering Department at NIT Hamirpur, dedicated to contributing to Nimbus, the institute’s annual technical festival. As a team, we cultivate a spirit of innovation, teamwork, and technical excellence, fostering an environment where students can develop and showcase their skills in electronics, robotics, embedded systems, and cutting-edge technologies. At Team Vibhav, we believe in nurturing a deep and genuine commitment toward technological advancements. Our diverse pool of talented students continuously explores new ideas, pushing the boundaries of what is possible. Whether it's designing intelligent automation systems, IoT-based applications, or futuristic electronic projects, we encourage creativity and hands-on learning.",
+  "connectWithUs": "Connect with us",
+  "name": "Name",
+  "email": "Email",
+  "message": "Message",
+  "sendMessage": "Send Message",
+  "sending": "Sending...",
+  "messageSent": "Message sent successfully!",
+  "messageFailed": "Failed to send message.",
+  "errorOccurred": "Error occurred. Please try again.",
+  "socialHandles": "Social Handles",
+  "faq": "Frequently Asked Questions",
+  "faqs": [
+    {
+      "question": "How can I apply for a job as a worker?",
+      "answer": "To apply for a job, simply browse the map to find available positions. Click on the job marker to view details such as location, wages, and requirements. If the job suits you, fill out the application form and submit it. You will be notified about the status of your application."
+    },
+    {
+      "question": "How do hirers create a job post?",
+      "answer": "Hirers can create a job post by filling out a simple form on the website. The form includes details like the job location, available posts (positions), wages, and more. Once submitted, your job post will be visible on the map for workers to apply."
+    },
+    {
+      "question": "Can a hirer see who applied for the job?",
+      "answer": "Yes, hirers can track applicants and view their details (name, contact info, etc.) through the hirer's dashboard. The hirer can also manage and review the applications directly."
+    },
+    {
+      "question": "How can I track the history of the workers I hired?",
+      "answer": "Hirers can view their hiring history on the Hirer History page. This page shows the details of workers they have hired, including names, contact information, and job specifics."
+    },
+    {
+      "question": "Can I apply for multiple jobs as a worker?",
+      "answer": "Yes, workers can apply for multiple jobs, provided they meet the job requirements and there are available positions."
+    }
+  ],
+  "application_form": "Application Form for Hirer",
+  "latitude": "Latitude",
+  "longitude": "Longitude",
+  "no_labourers_required": "No. of labourers required",
+  "wages": "Wages",
+  "work_location": "Work Location",
+  "location_placeholder": "Location",
+  "submit_button": "Submit",
+  "submitting_button": "Submitting...",
+  "login_error": "Please log in first!",
+  "success_message": "Hiring Location & History Saved Successfully!",
+  "error_message": "Failed to save hiring details.",
+  "hiring_history": "Your Hiring History",
+  "no_hiring_records": "No hiring records found.",
+  "labourers_required": "Labourers Required",
+  "vacancies": "Positions Available(vacancies)",
+  "applied_labourers": "Applied Laborers",
+  "no_labourers_applied": "No laborers applied yet.",
+  "error_loading_history": "Failed to load history.",
+  "welcome": "Welcome to our worker booth",
+  "description": "Hirers can create job posts, and workers can apply for jobs easily.",
+  "invalidUID": "Invalid UID. Please try again.",
+  "noWorkHistory": "No work history found for this UID.",
+  "fetchError": "Error fetching data. Please try again later.",
+  "workerProfile": "Worker Profile",
+  "uid": "UID",
+  "mobile": "Mobile Number",
+  "workHistory": "Work History",
+  "hirer": "Hirer",
+  "location": "Location",
+  "rateHirer": "Rate Hirer",
+  "viewReviews": "View Reviews",
+  "hirerReviews": "Hirer Reviews",
+  "rating": "Rating",
+  "review": "Review",
+  "submit": "Submit",
+  "close": "Close",
+  "reviewFetchError": "Error fetching reviews.",
+  "validRatingError": "Please provide a valid rating and review.",
+  "reviewSubmitted": "Review submitted successfully!",
+  "reviewSubmitError": "Error submitting review.",
+  "loading": "Loading...",
+  "unknownHirer": "Unknown Hirer",
+  "noReviews": "No reviews available",
+  "WorkerSection": "Workers Section",
+  "SocialHandles":"Social Handles",
   
+   
+    "worker_rating": "Worker Rating",
+   
+    "Rate Worker": "Rate Worker",
+    "invalid_rating": "Please provide a rating between 1 and 5.",
+    "rating_submitted": "Rating submitted successfully!",
+    "rating_submission_failed": "Failed to submit rating.",
+  
+    "rate_worker": "Rate Worker",
+    "write_review": "Write a review",
+    "ratings": "Ratings",
+    "View Reviews": "View Reviews",
+    "worker_reviews": "Worker Reviews",
+    "no_reviews": "No reviews available",
+    "labourer":"labourers",
+    "contact":"Contact",
+    
+      "formTitle": "Application Form for Hirer",
+   
+      "labourersRequired": "No. of labourers required",
+      "enterLabourers": "Enter labourers required",
+     
+      "amount": "Amount",
+      "workLocation": "Work Location",
+      "locationPlaceholder": "Location",
+    
+      "submitting": "Submitting...",
+      "toastSuccess": "Application submitted successfully",
+      "toastError": "An error occurred while submitting the form",
+      "loginError": "Please log in",
+      
+        "applicationForm": "Application Form",
+       
+        "postAvailable": "Post Available",
+        
+        "individual": "Individual",
+        "contractor": "Contractor",
+       
+        "uidNo": "UID No.",
+        "mobileNo": "Mobile No.",
+        "numberOfLabourers": "Number of Labourers",
+        
+        "hiredSuccessfully": "Hired Successfully",
+
+        
+          "workerAuth": "Worker Authentication",
+          "enterName": "Enter Name",
+          "enterUID": "Enter UID",
+          "enterMobile": "Enter Mobile No.",
+          "allFieldsRequired": "All fields are required!",
+          "authSuccess": "Authentication Successful!",
+          "noHistoryFound": "No work history found. Please check your details.",
+          "authFailed": "Authentication Failed. Try again.",
+          "authenticating": "Authenticating...",
+          "authenticate": "Authenticate"
+        
+        
+      
+      
+      
+    
+    
+  
+  
+}

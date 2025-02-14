@@ -4,6 +4,10 @@ import { auth, db } from "../firebase.config";
 import { collection, doc, getDoc, setDoc, addDoc } from "firebase/firestore"; // Fix import
 import { toast, Toaster } from "react-hot-toast";
 import "mapbox-gl/dist/mapbox-gl.css";
+import { useTranslation } from "react-i18next";
+
+
+  
 
 mapboxgl.accessToken =
   "pk.eyJ1Ijoid29ya2VyLWJvb3RoIiwiYSI6ImNsdW1rdTNwczE4cnAya2w1M2YwMnppeHUifQ.bk1WbObVQ6gSEve7O_wBaw"; // Replace with your Mapbox access token
@@ -20,6 +24,7 @@ export default function HierForm() {
   const [wages, setWages] = useState(0);
   const [marker, setMarker] = useState(null);
   const [isLoading, setIsLoading] = useState(false); // Loading state
+
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
@@ -182,9 +187,10 @@ export default function HierForm() {
       }
     });
   };
+  const { t } = useTranslation(); // Hook for translation
 
   return (
-    <div className="grid grid-cols-2 gap-8">
+    <div className="grid grid-cols-2 gap-8 h-[85vh]">
       <div>
         <div className="flex justify-center pt-24">
           <div className="flex flex-col w-[40vw] p-3 bg-white rounded-md relative">
@@ -195,11 +201,11 @@ export default function HierForm() {
             />
             <form onSubmit={handleHier}>
               <h2 className="text-2xl text-center font-bold mb-6">
-                Application Form for Hirer
+                {t("formTitle")}
               </h2>
               <div className="mb-3 flex gap-4">
                 <div className="mb-3">
-                  <label>Latitude</label>
+                  <label>{t("latitude")}</label>
                   <input
                     type="text"
                     className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-500"
@@ -209,7 +215,7 @@ export default function HierForm() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label>Longitude</label>
+                  <label>{t("longitude")}</label>
                   <input
                     type="text"
                     className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-500"
@@ -221,7 +227,7 @@ export default function HierForm() {
               </div>
               <div className="mb-3 flex gap-4">
                 <div className="mb-3">
-                  <label>No. of labourers required</label>
+                  <label>{t("labourersRequired")}</label>
                   <input
                     type="number" // Change to number input type
                     className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-500"
@@ -232,7 +238,7 @@ export default function HierForm() {
                   />
                 </div>
                 <div className="mb-3">
-                  <label>Wages</label>
+                  <label>{t("wages")}</label>
                   <input
                     type="number" // Change to number input type
                     className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-500"
@@ -244,7 +250,7 @@ export default function HierForm() {
                 </div>
               </div>
               <div className="mb-3 relative">
-                <label>Work Location</label>
+                <label>{t("workLocation")}</label>
                 <input
                   type="text"
                   className="w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:border-gray-500"
@@ -274,7 +280,7 @@ export default function HierForm() {
                   className="w-full bg-gray-500 text-white rounded-md px-2 py-2 hover:bg-gray-600 transition duration-300"
                   disabled={isLoading} // Disable button when loading
                 >
-                  {isLoading ? "Submitting..." : "Submit"}
+                  {isLoading ? t("submitting..."): t("submit")}
                 </button>
               </div>
             </form>

@@ -154,7 +154,7 @@ export default function HirerHistory() {
   if (loading) return <p>{t("loading")}</p>;
 
   return (
-    <div className="p-6">
+    <div className="p-6 ">
       <h2 className="text-2xl font-bold mb-4">{t("hiring_history")}</h2>
       {history.length === 0 ? (
         <p>{t("no_hiring_records")}</p>
@@ -174,9 +174,9 @@ export default function HirerHistory() {
                     <strong>{index+1}. </strong>
                   
                     <strong>{labourer.labourerName}</strong> ({labourer.applyingAs}) |
-                    <strong>Contact:</strong> {labourer.contact} |
-                    <strong>UID:</strong> {labourer.uidNo} |
-                    <strong> Labourers:</strong> {labourer.numberOfLabourers} |
+                    <strong>{t("contact")}:</strong> {labourer.contact} |
+                    <strong>{t("uid")}:</strong> {labourer.uidNo} |
+                    <strong> {t("labourer")}:</strong> {labourer.numberOfLabourers} |
                    
                   
                     <p>{t("worker_rating")}: 
