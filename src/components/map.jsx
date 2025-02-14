@@ -70,17 +70,17 @@ export default function Map() {
           color: isSelected ? "red" : "blue",
         })
           .setLngLat([marker.lng, marker.lat])
-          .setPopup(
-            new maplibregl.Popup({ closeButton: false }).setHTML(
-              `<div >
-                <p>${t("Labourers Required")}: ${marker.nal}</p>
-                <p>${t("Wages")}: Rs. ${marker.wages}</p>
-                <a href='/form?lat=${marker.lat}&lng=${marker.lng}&wages=${marker.wages}&nal=${marker.nal}&ID=${marker.ID}'>
-                  ${t("Open Form")}
-                </a>
-              </div>`
-            )
-          )
+          // .setPopup(
+          //   new maplibregl.Popup({ closeButton: false }).setHTML(
+          //     `<div >
+          //       <p>${t("Labourers Required")}: ${marker.nal}</p>
+          //       <p>${t("Wages")}: Rs. ${marker.wages}</p>
+          //       <a href='/form?lat=${marker.lat}&lng=${marker.lng}&wages=${marker.wages}&nal=${marker.nal}&ID=${marker.ID}'>
+          //         ${t("Open Form")}
+          //       </a>
+          //     </div>`
+          //   )
+          // )
           .addTo(map.current)
           .getElement()
           .addEventListener("click", () => handleMarkerSelect(marker));

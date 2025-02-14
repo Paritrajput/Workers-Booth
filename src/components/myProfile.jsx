@@ -51,7 +51,7 @@ const Myprofile = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between p-10 bg-gray-300">
+      <div className="flex items-center justify-between p-5 bg-gray-300">
         <div className="flex items-center gap-4">
           <FaRegCircleUser className="h-12 w-12" height={32} width={32} />
           <p className="text-2xl">{username || t("user")}</p> {/* Display the fetched username */}
