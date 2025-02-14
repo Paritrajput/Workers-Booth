@@ -53,36 +53,33 @@ function Form() {
     }
 
     try {
-      const formData = {
-        applyingAs,
-        numberOfLabourers,
-        name,
-        uidNo,
-        mobileNo,
-      };
-
       if (parseInt(numberOfLabourers) > nal) {
         toast.error("Number of labourers cannot exceed available posts.");
         return;
       }
 
-      setLoading(true); // Set loading to true when submitting
+      setLoading(true);
 
-      const entriesCollectionRef = collection(db, "filledPosition", ID, "entries");
-      await addDoc(entriesCollectionRef, formData);
+      const formData = { applyingAs, numberOfLabourers, name, uidNo, mobileNo };
+      await addDoc(collection(db, "filledPosition", ID, "entries"), formData);
+      setProgress(50);
 
-      setProgress(50); // Set progress to 50% after successful document submission
-      
-      let updatedNal = nal - parseInt(numberOfLabourers);
-      updatedNal = Math.max(updatedNal, 0);
-
-      const locationDocRef = doc(db, "location", ID);
-      await updateDoc(locationDocRef, { nal: updatedNal });
-
-      setProgress(100); // Complete progress bar
+      let updatedNal = Math.max(nal - parseInt(numberOfLabourers), 0);
+      await updateDoc(doc(db, "location", ID), { nal: updatedNal });
+      setProgress(100);
       toast.success("Hired Successfully");
 
-      // Clear the form data after successful submission
+      const historyData = {
+        name,
+        uidNo,
+        mobileNo,
+        location: applyingLocation,
+        wages,
+        locationID: ID,
+        timestamp: new Date(),
+      };
+      await addDoc(collection(db, "workerHistory"), historyData);
+
       setApplyingLocation("");
       setApplyingAs("individual");
       setNumberOfLabourers("1");
@@ -91,12 +88,11 @@ function Form() {
       setUidNo("");
       setMobileNo("");
       setWages(0);
-
     } catch (error) {
       console.error("Error updating number of available workers:", error);
       toast.error("Error submitting the form. Please try again.");
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
 
@@ -266,4 +262,4 @@ function Form() {
   );
 }
 
-export default Form;
+export default Form;    

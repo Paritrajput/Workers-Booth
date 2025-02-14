@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next"; // Importing the translation hoo
 export default function Map() {
   const mapContainer = useRef(null);
   const map = useRef(null);
-  const [API_KEY] = useState("4OjFkG91zRTKmrnLHyBh");
+  const [API_KEY] = useState("bAHHjgBgNLq5OCzCiEtk");
   const [zoom] = useState(10);
   const [mapController, setMapController] = useState();
   const [markersData, setMarkersData] = useState([]);
