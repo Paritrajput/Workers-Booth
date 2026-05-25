@@ -23,14 +23,14 @@ const ContactUs = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); //Prevent Page Reload
     setStatus(t("sending"));
 
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/contact`, {
-        method: "POST",
+        method: "POST", //pOST means sending data to server.
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json", //"I am sending JSON data"
         },
         body: JSON.stringify(formData),
       });

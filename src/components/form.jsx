@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase.config";
-import { toast, Toaster } from "react-hot-toast";
+import { toast, Toaster } from "react-hot-toast"; //displays popup on screen.
 import { collection, addDoc } from "firebase/firestore";
 import { useTranslation } from "react-i18next"; // Import i18n
 
